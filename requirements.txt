@@ -1,0 +1,10 @@
+pydub
+urllib3
+deepgram-sdk
+word2number
+openai
+langchain
+nltk
+language_tool_python
+beautifulsoup4
+tiktoken
