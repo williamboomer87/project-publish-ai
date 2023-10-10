@@ -1,0 +1,6 @@
+gradio
+openai
+bs4
+requests
+googlesearch-python
+beautifulsoup4
