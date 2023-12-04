@@ -4,4 +4,4 @@
 
 | Monday  | Tuesday   	| Wednesday  	| Thursday   	| Friday   	 |
 |---	    |---	        |---	        |---	        |---	       |
-|         |            	|             |  	          | Demo       |
+| Demo    |            	|             |  	          |            |
