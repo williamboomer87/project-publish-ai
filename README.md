@@ -1,7 +1,5 @@
 # Welcome to Project Publish AI
 
-## Demo Schedule
+## Project Demos
 
-| Monday  | Tuesday   	| Wednesday  	| Thursday   	| Friday   	 |
-|---	    |---	        |---	        |---	        |---	       |
-| Demo    |            	|             |  	          |            |
+Can be found [**here**]()
