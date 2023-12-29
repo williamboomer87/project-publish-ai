@@ -1,5 +1,5 @@
-Publish-AI
-Overview
+#Publish-AI
+#Overview
 This Flask application serves as a server for various AI language processing tasks. It includes functionalities such as transcription of audio files, grammar checking, tone adjustment, and cover image generation using OpenAI models. The application utilizes multiple external APIs, including OpenAI, Deepgram, and RapidAPI.
 
 Prerequisites
