@@ -819,7 +819,6 @@ def transcribe_audio():
     if file.filename == '' or not allowed_file(file.filename):
         return jsonify({"error": "No selected file or file type not allowed"}), 400
 
-    # Save file to disk
     filename = secure_filename(file.filename)
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(file_path)
