@@ -736,7 +736,7 @@ def generate_cover_image():
         return jsonify({"error": f"Error: {response.status_code} {response.text}"})
 
 
-@app.route('/generate_press_release', methods=['POST'])
+@app.route('/initial-form', methods=['POST'])
 def generate_press_release_endpoint():
     try:
         data = request.json
