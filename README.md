@@ -11,6 +11,8 @@ rapid_api_key: RapidAPI key
 deepkey: Deepgram API key
 Getting Started
 
+## API Documentation - https://documenter.getpostman.com/view/21883733/2s9YkuaJyU
+
 Clone the repository:
 
 git clone https://github.com/your-username/flask-ai-language-processing.git
