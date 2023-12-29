@@ -832,7 +832,7 @@ def transcribe_audio():
     url = "https://api.deepgram.com/v1/listen"
     headers = {
         # Replace with your Deepgram API key
-        "Authorization": "Token 7d2edf49af806f4d3f33e56f839468c61b372823",
+        "Authorization": deepkey,
         "Content-Type": file.content_type
     }
 
