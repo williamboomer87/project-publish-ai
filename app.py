@@ -30,8 +30,8 @@ from deepgram import DeepgramClient
 
 app = Flask(__name__)
 
-key = os.getenv('openai_key') 
-rapid_api_key = os.getenv('rapid_api_key') 
+key = os.getenv('openai_key')
+rapid_api_key = os.getenv('rapid_api_key')
 deepkey = os.getenv('deepkey')
 openai.api_key = key
 
@@ -55,10 +55,12 @@ num_processes_tone = multiprocessing.cpu_count()
 num_processes = 1
 print("Number of CPU Cores", num_processes)
 
+
 def num_tokens_from_string(string: str, encoding_name=model_name):
     encoding = tiktoken.encoding_for_model(encoding_name)
     num_tokens = len(encoding.encode(string))
     return num_tokens + 7
+
 
 def merge_sentences(sentences):
     merged_list = []
@@ -75,6 +77,7 @@ def merge_sentences(sentences):
         merged_list.append(current_sentence)
     return merged_list
 
+
 def merge_sentences_grammar(sentences):
     merged_list = []
     current_sentence = ""
@@ -90,10 +93,12 @@ def merge_sentences_grammar(sentences):
         merged_list.append(current_sentence)
     return merged_list
 
+
 def split_into_sentences(text):
     sentence_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
     sentences = sentence_tokenizer.tokenize(text)
     return sentences
+
 
 def grammar_check_api(sentence):
     conn = http.client.HTTPSConnection(
@@ -142,6 +147,7 @@ def grammar_check_api(sentence):
     """
 '''
 
+
 def reset_system_audio_file():
     book_dict_before_edited.clear()
     grammar_edited_book.clear()
@@ -150,6 +156,7 @@ def reset_system_audio_file():
     delete_files_in_directory('/tmp/gradio/wave_files/')
     delete_files_in_directory('/tmp/gradio/')
     return "Reset Completed"
+
 
 def deepgram_transcription(audio_files):
     for audio_file in audio_files:
@@ -167,6 +174,7 @@ def deepgram_transcription(audio_files):
                 json.dump(result, transcript)
 
     return "/tmp/gradio/wave_files/"
+
 
 def transcribe_audio_files(audio_files):
     converted_audio_paths = []
@@ -238,17 +246,21 @@ def transcribe_audio_files(audio_files):
     <div class='text-with-lines'>{wrapped_text}</div>
     """
 
+
 edited_transcription = ""
+
 
 def save_edited_transcription(content):
     global edited_transcription
     edited_transcription = content
     return "Transcription saved!"
 
+
 def show_saved_transcription():
     # This function will return the saved transcription
     global edited_transcription
     return edited_transcription
+
 
 def reset_system_audio_file():
     book_dict_before_edited.clear()
@@ -258,6 +270,7 @@ def reset_system_audio_file():
     delete_files_in_directory('/tmp/gradio/wave_files/')
     delete_files_in_directory('/tmp/gradio/')
     return "Reset Completed"
+
 
 def delete_files_in_directory(directory_path):
     try:
@@ -270,10 +283,12 @@ def delete_files_in_directory(directory_path):
     except OSError:
         print("Error occurred while deleting files.")
 
+
 def convert_to_wav(input_audio, output_path):
     audio = AudioSegment.from_file(io.BytesIO(input_audio))
     audio = audio.set_channels(1).set_frame_rate(16000)
     audio.export(output_path, format="wav")
+
 
 def generate_transcript(scripts_directory):
     file_count = 1
@@ -290,6 +305,7 @@ def generate_transcript(scripts_directory):
                 file_count += 1
     return chapter_dict
 
+
 def generate_whole_book(transcript_dict):
     whole_book_dict = {}
 
@@ -298,6 +314,7 @@ def generate_whole_book(transcript_dict):
         whole_book_dict.update(splited_chapters)
 
     return display_whole_book(whole_book_dict)
+
 
 def display_whole_book(whole_book_dict):
     book_before_edited = ""
@@ -323,6 +340,7 @@ def display_whole_book(whole_book_dict):
     # html_text_body = f"""<div onmousedown="return false" onselectstart="return false">{book_before_edited}</div>"""
     return book_before_edited
 
+
 def convert_word_to_number(word):
     try:
         number = w2n.word_to_num(word)
@@ -330,6 +348,7 @@ def convert_word_to_number(word):
         pass
         number = None
     return number
+
 
 def split_chapters(wrapped_text):
     try:
@@ -418,6 +437,7 @@ def split_chapters(wrapped_text):
     except Exception as e:
         return f"Error occured when coverting to the chapters: {e}"
 
+
 def langchain_function(prompt):
     chat_model = ChatOpenAI(
         temperature=0.4, openai_api_key=key, model_name=model_name)
@@ -426,6 +446,7 @@ def langchain_function(prompt):
     edited_ouput = chat_model.predict_messages(messages)
     wrapped_edited_text = textwrap.fill(edited_ouput.content, width=80)
     return wrapped_edited_text
+
 
 def generate_HTML_dict_from_input1(html_code):
     soup = BeautifulSoup(html_code, 'html.parser')
@@ -450,6 +471,7 @@ def generate_HTML_dict_from_input1(html_code):
 
     return data
 
+
 def generate_HTML_dict_from_input2(html_code):
     soup = BeautifulSoup(html_code, 'html.parser')
     data = {}
@@ -470,8 +492,10 @@ def generate_HTML_dict_from_input2(html_code):
 
     return data
 
+
 def remove_leading_number(text):
     return re.sub(r'^\s*\d+\s*', '', text)
+
 
 def generate_HTML_dict_from_input2_tone(html_code):
     soup = BeautifulSoup(html_code, 'html.parser')
@@ -488,6 +512,7 @@ def generate_HTML_dict_from_input2_tone(html_code):
             data[current_key] = next_p_tag.get_text(separator=" ", strip=True)
 
     return data
+
 
 def check_grammar_spellings_file():
     grammar_edited_book_now = {}
@@ -514,6 +539,7 @@ def check_grammar_spellings_file():
 
     global grammar_edited_book
     grammar_edited_book = grammar_edited_book_now
+
 
 def grammar_prompt(text):
     prompt_list = []
@@ -561,6 +587,7 @@ def grammar_prompt(text):
     <div class='text-with-lines'>{wrapped_text}</div>
     """
 
+
 def check_tone_of_the_book_file(tone, tone1):
     tone_edited_book_now = {}
     if not grammar_edited_book:
@@ -585,6 +612,7 @@ def check_tone_of_the_book_file(tone, tone1):
     tone_edited_book = tone_edited_book_now
     return tone_edited_book_now
 
+
 def tone_prompt(texts, tone, tone1):
     prompt_list = []
     for text in texts:
@@ -600,6 +628,7 @@ def tone_prompt(texts, tone, tone1):
 
     out_put_text = ' '.join(results)
     return out_put_text
+
 
 def generate_press_release(data):
     try:
@@ -622,7 +651,6 @@ def generate_press_release(data):
                            Give this as formatted HTML output.
                            """
 
-
         # Use GPT-3.5 Turbo to generate the press release
         response = openai.Completion.create(
             engine="text-davinci-003",  # GPT-3.5 Turbo engine
@@ -631,7 +659,6 @@ def generate_press_release(data):
             temperature=0.9,  # Adjust the temperature for creativity
         )
 
-
         # Extract the generated press release from the GPT-3.5 Turbo response
         press_release = response['choices'][0]['text'].strip()
         press_release.strip("\t")
@@ -639,15 +666,18 @@ def generate_press_release(data):
     except Exception as e:
         return str(e)
 
+
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = {'wav', 'mp3', 'ogg', 'flac', 'm4a'}
-
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/generate_cover_image', methods=['POST'])
 def generate_cover_image():
@@ -705,6 +735,7 @@ def generate_cover_image():
     else:
         return jsonify({"error": f"Error: {response.status_code} {response.text}"})
 
+
 @app.route('/generate_press_release', methods=['POST'])
 def generate_press_release_endpoint():
     try:
@@ -716,6 +747,7 @@ def generate_press_release_endpoint():
 
     except Exception as e:
         return jsonify({"error": str(e)})
+
 
 @app.route('/transcribe', methods=['POST'])
 def transcribe_text():
@@ -742,6 +774,7 @@ def transcribe_text():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @app.route('/check-tone', methods=['POST'])
 def check_tone():
@@ -770,33 +803,75 @@ def check_tone():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/upload-audio', methods=['POST'])
-def upload_audio():
+def transcribe_audio():
+    print("Received request")
+
     # Check if the post request has the file part
     if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
+        return jsonify({"error": "No file part"}), 400
+
     file = request.files['file']
+
     # If the user does not select a file, the browser submits an
     # empty file without a filename.
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
+    if file.filename == '' or not allowed_file(file.filename):
+        return jsonify({"error": "No selected file or file type not allowed"}), 400
 
-        # Prepare the audio file for transcription
-        with open(file_path, 'rb') as audio:
-            source = {'buffer': audio, 'mimetype': 'audio/m4a'}
+    # Save file to disk
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_path)
+    print("File saved successfully")
 
-            # Perform transcription
-            try:
-                response = dg.transcription.prerecorded.v(
-                    "1").transcribe_url(source, {'punctuate': True})
-                transcription = response['results']['channels'][0]['alternatives'][0]['transcript']
-                return jsonify({'message': 'File uploaded and transcribed successfully', 'filename': filename, 'transcription': transcription}), 200
-            except Exception as e:
-                return jsonify({'error': str(e)}), 500
+    # Read the audio file
+    with open(file_path, 'rb') as audio_file:
+        audio_content = audio_file.read()
+
+    # Deepgram API endpoint
+    url = "https://api.deepgram.com/v1/listen"
+    headers = {
+        # Replace with your Deepgram API key
+        "Authorization": "Token 7d2edf49af806f4d3f33e56f839468c61b372823",
+        "Content-Type": file.content_type
+    }
+
+    # Parameters for the Deepgram API
+    params = {
+        "filler_words": "false",
+        "summarize": "v2"
+    }
+
+    # Send the request to Deepgram
+    try:
+        response = requests.post(
+            url, params=params, data=audio_content, headers=headers)
+        response.raise_for_status()
+        print("Received response from Deepgram")
+    except requests.exceptions.HTTPError as e:
+        return jsonify({"error": "HTTP Error", "details": str(e)}), 500
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": "Request Exception", "details": str(e)}), 500
+
+    # Process the response
+    json_response = response.json()
+    transcript = json_response.get("results", {}).get("channels", [{}])[
+        0].get("alternatives", [{}])[0].get("transcript", "")
+
+    # Define the regular expression pattern
+    pattern = r'(Chapter (One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Fourteen|Fifteen|Sixteen|Seventeen|Eighteen|Nineteen|Twenty)|Conclusion|Introduction)'
+
+    # Function to add bold formatting
+    def bold_text(match):
+        return f"**{match.group()}**"
+
+    # Replace occurrences in the transcript with the bold version
+    formatted_transcript = re.sub(
+        pattern, bold_text, transcript, flags=re.IGNORECASE)
+
+    return jsonify({"transcript": formatted_transcript})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
